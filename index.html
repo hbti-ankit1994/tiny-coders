@@ -30,25 +30,25 @@
     /* === MOBILE SCALING MAGIC (FIXED) === */
     /* 8.5in x 11in equals exactly 816px x 1056px */
     @media (max-width: 850px) {
-      .page-wrapper {
-        /* Screen width minus 20px total padding (10px left + 10px right) */
-        width: calc(100vw - 20px); 
-        /* Match the 8.5x11 aspect ratio */
-        height: calc((100vw - 20px) * (1056 / 816)); 
-        overflow: hidden;
-        position: relative;
-        border-radius: 8px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-      }
-      .page {
-        transform: scale(calc((100vw - 20px) / 816));
-        transform-origin: top left;
-        margin: 0 !important;
-        position: absolute;
-        top: 0; left: 0;
-        box-shadow: none !important; /* Wrapper handles the shadow on mobile */
-      }
-    }
+
+  .page-wrapper {
+    width: 100%;
+    height: auto;              /* let height grow naturally */
+    overflow: visible;         /* IMPORTANT: no clipping */
+    position: relative;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  }
+
+  .page {
+    width: 100% !important;    /* full responsive width */
+    height: auto !important;   /* remove fixed height */
+    transform: none !important;/* REMOVE scaling */
+    position: relative;
+    margin: 0 auto;
+  }
+
+}
 
     /* === ANIMATIONS & INTERACTIVITY === */
     @keyframes float {
