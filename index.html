@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Preview: Tiny Coders - My First 10 Steps into Coding</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0; padding: 0; box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    body {
+      font-family: 'Comic Neue', cursive;
+      background: #1a1a2e;
+      color: #222;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 0;
+      gap: 20px;
+      overflow-x: hidden;
+    }
+    
+    /* === MOBILE SCALING MAGIC === */
+    @media (max-width: 840px) {
+      .page-wrapper {
+        width: 100vw;
+        height: calc(100vw * (11 / 8.5));
+        overflow: hidden;
+        position: relative;
+      }
+      .page {
+        transform: scale(calc(100vw / 816));
+        transform-origin: top left;
+        margin: 0 !important;
+        position: absolute;
+        top: 0; left: 0;
+      }
+    }
+
+    /* === ANIMATIONS & INTERACTIVITY === */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-12px); }
+      100% { transform: translateY(0px); }
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.1; }
+      50% { opacity: 0.35; }
+    }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-8deg) scale(1.1); }
+      75% { transform: rotate(8deg) scale(1.1); }
+    }
+    @keyframes pulse-btn {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .floating { animation: float 4s ease-in-out infinite; }
+    .twinkling { animation: twinkle 3s ease-in-out infinite; }
+    
+    .hover-lift {
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .hover-lift:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 12px 20px rgba(0,0,0,0.2) !important;
+      z-index: 10;
+    }
+    .hover-wiggle:hover {
+      animation: wiggle 0.5s ease-in-out infinite;
+      cursor: pointer;
+    }
+
+    /* Scroll Reveal - Safely hidden initially */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* === PAGE SHELL === */
+    .page {
+      width: 8.5in;
+      height: 11in;
+      background: #fffef5;
+      position: relative;
+      overflow: hidden;
+      margin: 0 auto;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      border-radius: 8px;
+    }
+
+    /* === BANNER === */
+    .banner {
+      height: 60px;
+      min-height: 60px;
+      max-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      border-bottom: 3px solid #222;
+      padding: 0 20px;
+      overflow: hidden;
+    }
+    .banner .icon { font-size: 26px; flex-shrink: 0; }
+    .banner .title {
+      font-family: 'Bangers', cursive;
+      font-size: 28px;
+      color: #fff;
+      text-shadow: 2px 2px 0 #222, -1px -1px 0 #222, 1px -1px 0 #222, -1px 1px 0 #222;
+      letter-spacing: 2px;
+      white-space: nowrap;
+    }
+    .b1 { background: linear-gradient(135deg, #74b9ff, #a29bfe); }
+    .b2 { background: linear-gradient(135deg, #55efc4, #00b894); }
+    .b-gold { background: linear-gradient(135deg, #f9ca24, #e17055); }
+
+    /* === FOOTER === */
+    .footer {
+      height: 26px;
+      min-height: 26px;
+      max-height: 26px;
+      background: #222;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      border-top: 2px solid #f9ca24;
+      overflow: hidden;
+    }
+    .footer span { font-family: 'Bangers', cursive; font-size: 11px; color: #ffeaa7; letter-spacing: 2px; }
+
+    /* === CONTENT === */
+    .content { flex: 1; padding: 10px 16px; display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
+
+    /* === UTILITIES === */
+    .p { border: 3px solid #222; border-radius: 8px; padding: 10px 12px; overflow: hidden; }
+    .ct { font-family: 'Bangers', cursive; letter-spacing: 1px; line-height: 1.2; }
+    .cb { font-family: 'Comic Neue', cursive; font-weight: 700; line-height: 1.4; }
+    .fs-xl { font-size: 22px; }
+    .fs-l  { font-size: 17px; }
+    .fs-m  { font-size: 14px; }
+    .fs-s  { font-size: 12px; }
+    .fs-xs { font-size: 11px; }
+    .white { color: #fff; text-shadow: 1px 1px 0 rgba(0,0,0,0.2); }
+    .center { text-align: center; }
+    .speech { background: #fff; border: 2.5px solid #222; border-radius: 16px; padding: 8px 14px; font-weight: 700; font-size: 14px; text-align: center; position: relative; }
+    .step { display: flex; align-items: center; gap: 8px; background: #fff; border: 2px solid #222; border-radius: 6px; padding: 5px 10px; }
+    .step-n { font-family: 'Bangers', cursive; font-size: 18px; color: #fff; background: #6c5ce7; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .row { display: flex; gap: 8px; align-items: center; }
+    .col { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+    .grow { flex: 1; }
+    .jc { justify-content: center; }
+    .stretch { align-items: stretch; }
+    .locked { opacity: 0.6; filter: grayscale(80%); transition: all 0.3s; }
+    .locked:hover { opacity: 0.9; filter: grayscale(20%); }
+    
+    /* CTA Button Styles */
+    .cta-btn {
+      display: inline-block;
+      background: #e17055;
+      color: #fff;
+      font-family: 'Bangers', cursive;
+      font-size: 32px;
+      padding: 15px 40px;
+      border-radius: 30px;
+      border: 4px solid #fff;
+      text-decoration: none;
+      box-shadow: 0 6px 0 #d63031, 0 10px 20px rgba(0,0,0,0.3);
+      transition: all 0.2s;
+      letter-spacing: 2px;
+    }
+    .cta-btn:hover {
+      animation: pulse-btn 1.5s infinite;
+      box-shadow: 0 8px 0 #d63031, 0 15px 25px rgba(0,0,0,0.4);
+    }
+    .cta-btn:active {
+      transform: translateY(6px);
+      box-shadow: 0 0px 0 #d63031, 0 5px 10px rgba(0,0,0,0.3);
+      animation: none;
+    }
+  </style>
+</head>
+<body>
+
+<div style="color: #fff; text-align: center; max-width: 800px; padding: 10px;">
+  <h1 class="hover-wiggle" style="font-family: 'Bangers', cursive; font-size: 36px; letter-spacing: 2px; color: #ffeaa7; display:inline-block;">Free Sneak Peek! 👀</h1>
+  <p style="font-family: 'Comic Neue', cursive; font-weight: 700; font-size: 16px;">Scroll down to read the first two chapters of Tiny Coders.</p>
+</div>
+
+<div class="page-wrapper">
+<div class="page" style="background:linear-gradient(160deg,#1a1a2e 0%,#16213e 40%,#0f3460 100%);">
+  <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 30px; text-align:center; position:relative; overflow:hidden;">
+    
+    <div class="twinkling" style="position:absolute; inset:0; font-size:20px; line-height:2.2; word-spacing:20px; pointer-events:none; overflow:hidden;">
+      ⭐ 💻 🤖 ⭐ 🎮 ✨ 🧱 ⭐ 🐛 💡 ✨ 🔁 ⭐ 🎵 💻 ✨ 🤖 ⭐ ❓ 🧱 ✨ 🎨 ⭐ 💻 🤖 ⭐ 🎮 ✨ 🧱 ⭐ 🐛 💡 ✨ 🔁 ⭐ 🎵
+    </div>
+    
+    <div class="hover-wiggle" style="position:absolute; top:20px; right:24px; width:100px; height:100px; background:#fff200; clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%); display:flex; align-items:center; justify-content:center; transform:rotate(8deg); z-index:10; transition: transform 0.2s;">
+      <span style="font-family:'Bangers',cursive; font-size:16px; color:#d63031; text-align:center; line-height:1.1; transform:rotate(-8deg);">Ages<br>3 - 5!</span>
+    </div>
+
+    <svg class="floating hover-lift" width="180" height="195" viewBox="0 0 140 150" style="filter:drop-shadow(0 6px 20px rgba(0,0,0,0.5)); margin-bottom:16px; position:relative; z-index:2;">
+      <line x1="70" y1="8" x2="70" y2="25" stroke="#ffeaa7" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="70" cy="6" r="6" fill="#ff7675" stroke="#ffeaa7" stroke-width="2"/>
+      <rect x="30" y="25" width="80" height="55" rx="14" fill="#74b9ff" stroke="#ffeaa7" stroke-width="3"/>
+      <circle cx="50" cy="50" r="10" fill="#fff" stroke="#222" stroke-width="2"/>
+      <circle cx="90" cy="50" r="10" fill="#fff" stroke="#222" stroke-width="2"/>
+      <circle cx="52" cy="48" r="5" fill="#222"/><circle cx="92" cy="48" r="5" fill="#222"/>
+      <circle cx="54" cy="46" r="2" fill="#fff"/><circle cx="94" cy="46" r="2" fill="#fff"/>
+      <path d="M55 65 Q70 78 85 65" fill="none" stroke="#222" stroke-width="3" stroke-linecap="round"/>
+      <rect x="35" y="82" width="70" height="40" rx="8" fill="#a29bfe" stroke="#ffeaa7" stroke-width="3"/>
+      <text x="70" y="108" text-anchor="middle" font-size="20" class="hover-wiggle" style="display:inline-block; transform-origin: center;">❤️</text>
+      <rect x="10" y="86" width="24" height="12" rx="6" fill="#74b9ff" stroke="#ffeaa7" stroke-width="2.5"/>
+      <rect x="106" y="86" width="24" height="12" rx="6" fill="#74b9ff" stroke="#ffeaa7" stroke-width="2.5"/>
+      <rect x="44" y="122" width="16" height="22" rx="6" fill="#636e72" stroke="#ffeaa7" stroke-width="2.5"/>
+      <rect x="80" y="122" width="16" height="22" rx="6" fill="#636e72" stroke="#ffeaa7" stroke-width="2.5"/>
+      <rect x="40" y="140" width="24" height="10" rx="5" fill="#fdcb6e" stroke="#ffeaa7" stroke-width="2"/>
+      <rect x="76" y="140" width="24" height="10" rx="5" fill="#fdcb6e" stroke="#ffeaa7" stroke-width="2"/>
+    </svg>
+
+    <div style="font-family:'Bangers',cursive; font-size:64px; color:#fff; text-shadow:4px 4px 0 #e17055, 8px 8px 0 rgba(0,0,0,0.3); letter-spacing:4px; line-height:1; position:relative; z-index:2; transition: text-shadow 0.3s;" onmouseover="this.style.textShadow='4px 4px 0 #e17055, 12px 12px 0 rgba(0,0,0,0.5)'" onmouseout="this.style.textShadow='4px 4px 0 #e17055, 8px 8px 0 rgba(0,0,0,0.3)'">TINY CODERS</div>
+    <div style="font-family:'Bangers',cursive; font-size:22px; color:#ffeaa7; letter-spacing:2px; margin-top:10px; position:relative; z-index:2;">My First 10 Steps into Coding</div>
+    <div style="width:200px; height:3px; background:linear-gradient(90deg,transparent,#ffeaa7,transparent); margin:16px 0; position:relative; z-index:2;"></div>
+    <div style="font-family:'Comic Neue',cursive; font-weight:700; font-size:18px; color:#b2bec3; letter-spacing:1px; position:relative; z-index:2;">Written by</div>
+    <div style="font-family:'Bangers',cursive; font-size:30px; color:#fff; letter-spacing:2px; text-shadow:2px 2px 0 rgba(0,0,0,0.3); position:relative; z-index:2;">Ankit Srivastava</div>
+    
+    <div style="display:flex; gap:14px; margin-top:20px; position:relative; z-index:2;">
+      <div class="hover-lift" style="background:#6c5ce7; color:#fff; font-family:'Bangers',cursive; font-size:13px; padding:4px 14px; border-radius:20px; border:2px solid #ffeaa7;">10 Chapters</div>
+      <div class="hover-lift" style="background:#00b894; color:#fff; font-family:'Bangers',cursive; font-size:13px; padding:4px 14px; border-radius:20px; border:2px solid #ffeaa7;">Beginner Friendly</div>
+      <div class="hover-lift" style="background:#e17055; color:#fff; font-family:'Bangers',cursive; font-size:13px; padding:4px 14px; border-radius:20px; border:2px solid #ffeaa7;">Fun Activities</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="page-wrapper reveal">
+<div class="page">
+  <div class="banner" style="background:linear-gradient(135deg,#f9ca24,#e17055);">
+    <span class="icon hover-wiggle">📖</span>
+    <span class="title">Table of Contents</span>
+  </div>
+  <div class="content">
+    <div class="p center" style="background:#74b9ff;">
+      <div class="speech" style="font-size:15px; display:inline-block;">Hey little coder! Ready for an adventure? Let's look at what's inside!</div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:7px; flex:1;">
+      <div class="p hover-lift" style="background:linear-gradient(135deg,#74b9ff,#a29bfe); display:flex; align-items:center; gap:8px; padding:8px 10px;">
+        <div style="font-size:28px; flex-shrink:0;">🤖</div>
+        <div>
+          <div class="cb fs-xs" style="opacity:0.6;">Chapter 1</div>
+          <div class="ct fs-m">Meet Byte the Robot!</div>
+          <div class="cb fs-xs" style="color:#222; font-weight:900;">FREE PREVIEW</div>
+        </div>
+      </div>
+      <div class="p hover-lift" style="background:linear-gradient(135deg,#55efc4,#00b894); display:flex; align-items:center; gap:8px; padding:8px 10px;">
+        <div style="font-size:28px; flex-shrink:0;">📋</div>
+        <div>
+          <div class="cb fs-xs" style="opacity:0.6;">Chapter 2</div>
+          <div class="ct fs-m">What Are Instructions?</div>
+          <div class="cb fs-xs" style="color:#222; font-weight:900;">FREE PREVIEW</div>
+        </div>
+      </div>
+      <div class="p locked hover-lift" style="background:linear-gradient(135deg,#fdcb6e,#f39c12); display:flex; align-items:center; gap:8px; padding:8px 10px;">
+        <div style="font-size:28px; flex-shrink:0;">🔒</div><div><div class="cb fs-xs">Chapter 3</div><div class="ct fs-m">Up, Down, Left, Right!</div></div>
+      </div>
+      <div class="p locked hover-lift" style="background:linear-gradient(135deg,#fd79a8,#e84393); display:flex; align-items:center; gap:8px; padding:8px 10px;">
+        <div style="font-size:28px; flex-shrink:0;">🔒</div><div><div class="cb fs-xs">Chapter 4</div><div class="ct fs-m">Do It Again! Loops!</div></div>
+      </div>
+      <div class="p locked hover-lift" style="background:linear-gradient(135deg,#a29bfe,#6c5ce7); display:flex; align-items:center; gap:8px; padding:8px 10px;">
+        <div style="font-size:28px; flex-shrink:0;">🔒</div><div><div class="cb fs-xs">Chapter 5</div><div class="ct fs-m">Patterns Everywhere!</div></div>
+      </div>
+      <div class="p locked hover-lift" style="background:linear-gradient(135deg,#ff7675,#d63031); display:flex; align-items:center; gap:8px; padding:8px 10px;">
+        <div style="font-size:28px; flex-shrink:0;">🔒</div><div><div class="cb fs-xs">Chapter 6</div><div class="ct fs-m">Uh Oh! Bug Hunt!</div></div>
+      </div>
+      <div class="p locked hover-lift" style="background:linear-gradient(135deg,#ffeaa7,#fdcb6e); display:flex; align-items:center; gap:8px; padding:8px 10px;">
+        <div style="font-size:28px; flex-shrink:0;">🔒</div><div><div class="cb fs-xs">Chapter 7</div><div class="ct fs-m">Yes or No? If-Then!</div></div>
+      </div>
+      <div class="p locked hover-lift" style="background:linear-gradient(135deg,#81ecec,#00cec9); display:flex; align-items:center; gap:8px; padding:8px 10px;">
+        <div style="font-size:28px; flex-shrink:0;">🔒</div><div><div class="cb fs-xs">Chapter 8</div><div class="ct fs-m">Build with Blocks!</div></div>
+      </div>
+      <div class="p locked hover-lift" style="background:linear-gradient(135deg,#fab1a0,#e17055); display:flex; align-items:center; gap:8px; padding:8px 10px;">
+        <div style="font-size:28px; flex-shrink:0;">🔒</div><div><div class="cb fs-xs">Chapter 9</div><div class="ct fs-m">Byte Makes Music!</div></div>
+      </div>
+      <div class="p locked hover-lift" style="background:linear-gradient(135deg,#dfe6e9,#636e72); display:flex; align-items:center; gap:8px; padding:8px 10px;">
+        <div style="font-size:28px; flex-shrink:0;">🔒</div><div><div class="cb fs-xs">Chapter 10</div><div class="ct fs-m">You Are a Tiny Coder!</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>Tiny Coders Preview</span><span>2</span></div>
+</div>
+</div>
+
+<div class="page-wrapper reveal">
+<div class="page">
+  <div class="banner b1">
+    <span class="icon hover-wiggle">🤖</span>
+    <span class="title">Chapter 1: Meet Byte the Robot!</span>
+  </div>
+  <div class="content">
+    <div class="p center" style="flex:2; background:linear-gradient(180deg,#74b9ff,#a8e6cf); display:flex; flex-direction:column; align-items:center; justify-content:center;">
+      <div class="speech" style="margin-bottom:14px; font-size:16px;">
+        Hi there! I'm <strong>Byte</strong> the Robot! I need YOUR help to learn new things!
+      </div>
+      <svg class="floating hover-lift" width="130" height="140" viewBox="0 0 140 150">
+        <line x1="70" y1="8" x2="70" y2="25" stroke="#222" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="70" cy="6" r="6" fill="#ff7675" stroke="#222" stroke-width="2"/>
+        <rect x="30" y="25" width="80" height="55" rx="14" fill="#74b9ff" stroke="#222" stroke-width="3"/>
+        <circle cx="50" cy="50" r="10" fill="#fff" stroke="#222" stroke-width="2"/>
+        <circle cx="90" cy="50" r="10" fill="#fff" stroke="#222" stroke-width="2"/>
+        <circle cx="52" cy="48" r="5" fill="#222"/><circle cx="92" cy="48" r="5" fill="#222"/>
+        <path d="M55 65 Q70 78 85 65" fill="none" stroke="#222" stroke-width="3" stroke-linecap="round"/>
+        <rect x="35" y="82" width="70" height="40" rx="8" fill="#a29bfe" stroke="#222" stroke-width="3"/>
+        <text x="70" y="108" text-anchor="middle" font-size="20">❤️</text>
+      </svg>
+    </div>
+    <div class="row stretch" style="flex:1; gap:8px;">
+      <div class="p center hover-lift" style="flex:1; background:#ffeaa7; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <div style="font-size:36px;" class="hover-wiggle">💻</div>
+        <div class="cb fs-m">A <strong>computer</strong> is a machine that follows instructions. Tablets, phones, and TVs are all computers!</div>
+      </div>
+      <div class="p center hover-lift" style="flex:1; background:#fab1a0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <div style="font-size:36px;" class="hover-wiggle">🗣️</div>
+        <div class="cb fs-m"><strong>Coding</strong> is how we talk to computers. We give them step-by-step instructions!</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>Tiny Coders Preview</span><span>3</span></div>
+</div>
+</div>
+
+<div class="page-wrapper reveal">
+<div class="page">
+  <div class="banner b2">
+    <span class="icon hover-wiggle">📋</span>
+    <span class="title">Chapter 2: What Are Instructions?</span>
+  </div>
+  <div class="content">
+    <div class="p" style="background:#ffeaa7;">
+      <div class="cb fs-l center" style="margin-bottom:8px;">Byte wants to make a sandwich! 🥪 But without clear instructions...</div>
+      <div class="row stretch" style="gap:6px;">
+        <div class="p center hover-lift" style="flex:1; background:#fff; padding:8px;">
+          <div style="font-size:32px;">🍞😵</div>
+          <div class="cb fs-s">"Put bread"</div>
+          <div class="cb fs-xs" style="color:#d63031;">Puts bread on head!</div>
+        </div>
+        <div class="p center hover-lift" style="flex:1; background:#fff; padding:8px;">
+          <div style="font-size:32px;">🥜💥</div>
+          <div class="cb fs-s">"Add peanut butter"</div>
+          <div class="cb fs-xs" style="color:#d63031;">Throws the whole jar!</div>
+        </div>
+        <div class="p center hover-lift" style="flex:1; background:#fff; padding:8px;">
+          <div style="font-size:32px;">🤖😢</div>
+          <div class="cb fs-s">"Done!"</div>
+          <div class="cb fs-xs" style="color:#d63031;">What a mess!</div>
+        </div>
+      </div>
+    </div>
+    <div class="p" style="background:#55efc4; flex:1;">
+      <div class="ct fs-l center hover-wiggle" style="color:#00b894; margin-bottom:6px; display:inline-block; width:100%;">With Good Instructions ✅</div>
+      <div class="col" style="gap:5px;">
+        <div class="step hover-lift" style="width:100%;"><div class="step-n">1</div><div class="cb fs-m">Pick up two slices of bread 🍞🍞</div></div>
+        <div class="step hover-lift" style="width:100%;"><div class="step-n">2</div><div class="cb fs-m">Put them flat on the plate 🍽️</div></div>
+        <div class="step hover-lift" style="width:100%;"><div class="step-n">3</div><div class="cb fs-m">Spread peanut butter on one slice 🥜</div></div>
+        <div class="step hover-lift" style="width:100%;"><div class="step-n">4</div><div class="cb fs-m">Put the other slice on top! 🥪 🎉</div></div>
+      </div>
+    </div>
+    <div class="p center" style="background:#a29bfe;">
+      <div class="cb fs-l white">Computers need <strong>very clear</strong> step-by-step instructions. This is called an <strong>Algorithm</strong>! 🧠</div>
+    </div>
+  </div>
+  <div class="footer"><span>Tiny Coders Preview</span><span>4</span></div>
+</div>
+</div>
+
+<div class="page-wrapper reveal">
+<div class="page">
+  <div class="banner b-gold">
+    <span class="icon hover-wiggle">🚀</span>
+    <span class="title">Unlock the Full Adventure!</span>
+  </div>
+  <div class="content" style="justify-content: center; background: #fffef5;">
+    
+    <div class="p center" style="background: linear-gradient(135deg, #74b9ff, #a29bfe); padding: 40px 20px; border-width: 4px;">
+      <h2 class="ct" style="font-size: 42px; color: #fff; text-shadow: 2px 2px 0 #222; margin-bottom: 20px;">You've completed the preview! 🎉</h2>
+      
+      <p class="cb" style="font-size: 20px; color: #fff; margin-bottom: 30px;">
+        Get the full book to help Byte learn about <strong>Loops, Patterns, Bugs, If-Then Logic</strong>, and even <strong>Music Code!</strong> Includes 10 total chapters, fun drawing activities, and a Tiny Coder Certificate!
+      </p>
+
+      <a href="https://www.amazon.com/dp/B0GX2VL81F" class="cta-btn" target="_blank">
+        📚 GET THE FULL BOOK ON AMAZON
+      </a>
+	  
+	  <a href="https://www.amazon.in/dp/B0GX2VL81F" class="cta-btn" target="_blank">
+        Amazon India
+      </a>
+      
+      <p class="cb" style="font-size: 14px; color: #ffeaa7; margin-top: 20px; font-weight: normal;">
+        Available now in Paperback. Perfect for ages 3-5!
+      </p>
+    </div>
+
+  </div>
+  <div class="footer"><span>Tiny Coders &bull; End of Preview</span><span>5</span></div>
+</div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px 0px -50px 0px', // Triggers slightly before it fully enters
+      threshold: 0.01 // Triggers as soon as 1% is visible
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          observer.unobserve(entry.target); // Only animate once
+        }
+      });
+    }, observerOptions);
+
+    const elementsToReveal = document.querySelectorAll('.reveal');
+    elementsToReveal.forEach(el => observer.observe(el));
+  });
+</script>
+
+</body>
+</html>
